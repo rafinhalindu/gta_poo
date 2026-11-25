@@ -2,6 +2,7 @@ package br.com.fatec;
 import javax.swing.JOptionPane;
 import java.util.List;
 import java.util.Random;
+import java.util.Comparator;
 
 public class Jogo {
     private static final int CORRIDAS = 3;
@@ -28,6 +29,7 @@ public class Jogo {
                     break;
 
                 case "2":
+                    ranking();
                     break;
 
                 case "0":
@@ -174,5 +176,31 @@ public class Jogo {
         }
 
         return texto.toString();
+    }
+    private static void ranking() {
+
+    PartidaDAO dao = new PartidaDAO();
+
+    List<Partida> partidas = dao.listar();
+
+    partidas.sort(
+        Comparator.comparingInt(Partida::getPontuacao).reversed()
+    );
+
+    StringBuilder texto = new StringBuilder("RANKING\n\n");
+
+    for (int i = 0; i < partidas.size() && i < 5; i++) {
+
+        Partida p = partidas.get(i);
+
+        texto.append(i + 1)
+            .append(". ")
+            .append(p.getJogador())
+            .append(" - ")
+            .append(p.getPontuacao())
+            .append(" pontos\n");
+    }
+
+    JOptionPane.showMessageDialog(null, texto.toString());
     }
 }
